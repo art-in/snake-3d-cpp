@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"presentation": {
+				// clear console before running
+				"clear": true
+			}
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: start",
+			"presentation": {
+				"clear": true
+			}
+		}
+	]
+}

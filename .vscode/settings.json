@@ -1,0 +1,115 @@
+{
+  "C_Cpp.clang_format_style": "Google",
+  "editor.formatOnSave": true,
+  "clang-tidy.checks": [
+    "*",
+    // deactivate controversial rules:
+    // it doesn't allow to override operator==, etc.
+    "-fuchsia-*",
+    // it needs long header guard instead of simple '#pragma once'
+    "-llvm-header-guard",
+    // closing comments for namespaces seems unnecessary in case there's no 
+    // nested namespaces
+    "-google-readability-namespace-comments",
+    "-llvm-namespace-comment",
+    // it prevents creating struct with constructor and public fields,
+    // as it requires to hide fields under private and expose them through
+    // getter/setter methods, which is too much for struct which actually
+    // doesn't need incapsulation
+    "-misc-non-private-member-variables-in-classes",
+    // it forces to define all special member function for class
+    // (copy/move, ctr/assignment, destr), when you have only one of those,
+    // which looks unnecessary when you need custom destructor only
+    "-cppcoreguidelines-special-member-functions",
+    "-hicpp-special-member-functions",
+    // it prevents using macro funcs, I need it for learning macros
+    "-cppcoreguidelines-macro-usage",
+    // it prevents casts, I need it to work with raw memory
+    "-cppcoreguidelines-pro-type-reinterpret-cast",
+    "-cppcoreguidelines-pro-type-const-cast",
+    // it prevents work with raw memory directly
+    "-cppcoreguidelines-owning-memory",
+    // it prevents bitwise AND-operator on signed integers, while those are
+    // defined in third party headers (opengl), so I can't change their types.
+    // and I don't want to static_cast them either
+    "-hicpp-signed-bitwise",
+    // it's a duplicate of 'readability-magic-numbers' rule
+    "-cppcoreguidelines-avoid-magic-numbers",
+  ],
+  "clang-tidy.lintOnSave": true,
+  "clang-tidy.fixOnSave": false,
+  "clang-tidy.compilerArgs": [
+    "-std=c++20",
+    "--include-directory=/emsdk/upstream/emscripten/system/include"
+  ],
+  "files.associations": {
+    "*.glsl": "c",
+    "system_error": "cpp",
+    "ostream": "cpp",
+    "string": "cpp",
+    "algorithm": "cpp",
+    "any": "cpp",
+    "array": "cpp",
+    "atomic": "cpp",
+    "strstream": "cpp",
+    "bit": "cpp",
+    "*.tcc": "cpp",
+    "bitset": "cpp",
+    "cctype": "cpp",
+    "cfenv": "cpp",
+    "charconv": "cpp",
+    "chrono": "cpp",
+    "clocale": "cpp",
+    "cmath": "cpp",
+    "codecvt": "cpp",
+    "complex": "cpp",
+    "condition_variable": "cpp",
+    "cstdarg": "cpp",
+    "cstddef": "cpp",
+    "cstdint": "cpp",
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "cwchar": "cpp",
+    "cwctype": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "map": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "exception": "cpp",
+    "functional": "cpp",
+    "iterator": "cpp",
+    "memory": "cpp",
+    "memory_resource": "cpp",
+    "numeric": "cpp",
+    "optional": "cpp",
+    "random": "cpp",
+    "ratio": "cpp",
+    "regex": "cpp",
+    "string_view": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "fstream": "cpp",
+    "future": "cpp",
+    "initializer_list": "cpp",
+    "iomanip": "cpp",
+    "iosfwd": "cpp",
+    "iostream": "cpp",
+    "istream": "cpp",
+    "limits": "cpp",
+    "mutex": "cpp",
+    "new": "cpp",
+    "shared_mutex": "cpp",
+    "sstream": "cpp",
+    "stdexcept": "cpp",
+    "streambuf": "cpp",
+    "thread": "cpp",
+    "cinttypes": "cpp",
+    "typeinfo": "cpp",
+    "valarray": "cpp",
+    "variant": "cpp"
+  }
+}

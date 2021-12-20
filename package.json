@@ -1,0 +1,20 @@
+{
+  "author": "art-in <artin@artin.space>",
+  "name": "snake-3d-cpp",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "clean": "rimraf build pack",
+    "cmake": "cmake -DCMAKE_TOOLCHAIN_FILE=/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake .",
+    "build": "npm run cmake && cmake --build . --verbose",
+    "pack": "npm run clean && npm run build && webpack",
+    "start": "npm run clean && npm run build && webpack-dev-server --open"
+  },
+  "dependencies": {
+    "copy-webpack-plugin": "^10.0.0",
+    "rimraf": "^3.0.2",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.6.0"
+  }
+}
