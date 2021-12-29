@@ -1,5 +1,5 @@
 {
-	"name": "snake-cpp",
+	"name": "snake-3d-cpp",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
@@ -9,6 +9,7 @@
 		"editor.formatOnSave": true
 	},
 	"extensions": [
+		"eamodio.gitlens",
 		"mutantdino.resourcemonitor",
 		"ms-vscode.cpptools-extension-pack",
 		"notskm.clang-tidy",

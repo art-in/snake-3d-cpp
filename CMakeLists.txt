@@ -27,7 +27,7 @@ set_target_properties(
     # - pack all files been read in c++ code into '.data' file next to '.wasm'
     # - support embind feature (eg. emscripten::val)
     "-s ENVIRONMENT='web' \
-     --preload-file src/shaders/vertex.glsl \
-     --preload-file src/shaders/fragment.glsl \
+     --preload-file src/drawers/cube-drawer/shaders/vertex.glsl \
+     --preload-file src/drawers/cube-drawer/shaders/fragment.glsl \
      --bind"
 )

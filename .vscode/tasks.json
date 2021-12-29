@@ -8,8 +8,7 @@
 			"problemMatcher": [],
 			"label": "npm: build",
 			"presentation": {
-				// clear console before running
-				"clear": true
+				"clear": true // clear previous output before running again
 			}
 		},
 		{
