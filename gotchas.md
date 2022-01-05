@@ -8,12 +8,16 @@
 
     downsides of dynamic binding compared to static binding:  
     - no static validation (no typecheck, autocomplete, docs, etc)
-    - slower, because it first needs to copy field/method name string from wasm memory to js memory.  
+    - slower, because it first needs to copy method name string from wasm memory to js memory.  
       eg. wasm calls `__emval_call_void_method(caller, handle, methodName, args)` where `methodName`
       and `args` are pointers to wasm memory.  
       it first copies method name to js memory char by char converting it from UTF-8 to UTF-16 along the way.  
       `args` points to arguments object located in wasm memory, which should be extracted/copied one by one too.  
       `handle` is index of js object previously saved to handle array to call methods on it, which is the same as with static binding.  
+
+      `readLatin1String` js glue function performs this copy/conversion for method name strings.  
+      it takes 8% of total js/wasm execution time, and is second hottest func after `texSubImage2D` (which updates cube textures) with 9%
+
 
 1. emscripten provides several static binding options to work with canvas's webgl/2D context:  
     - SDL/OpenGL/OpenGLES/webgl translates to webgl context
