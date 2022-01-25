@@ -8,3 +8,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # hide "new version of npm available" notification from CLI
 RUN npm config set update-notifier false
+
+# install global node modules
+RUN npm install -g serve@13.0.2

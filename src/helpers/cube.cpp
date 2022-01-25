@@ -9,29 +9,6 @@
 #include "graphics-math.hpp"
 #include "ranges.hpp"
 
-auto getCubeRotationForPosition(const CubePosition& pos, const Grid& grid)
-    -> ModelRotation {
-  auto pos3d = getPosition3dForCubePosition(pos, grid);
-
-  // angle around X axis
-  auto x_vector = pos3d;
-  x_vector.y = 0;
-  auto xAngleRad =
-      (pos3d.y > 0 ? 1 : -1) * getAngleBetweenVectors(pos3d, x_vector);
-
-  // angle around Y axis
-  auto y_vector = pos3d;
-  y_vector.x = 0;
-  auto y_angle_rad =
-      (pos3d.x > 0 ? -1 : 1) * getAngleBetweenVectors(pos3d, y_vector);
-  y_angle_rad = pos3d.z < 0 ? M_PI - y_angle_rad : y_angle_rad;
-
-  return {
-      .x = std::round(normalizeDegrees(radToDeg(xAngleRad))),
-      .y = std::round(normalizeDegrees(radToDeg(y_angle_rad))),
-  };
-}
-
 auto getPosition3dForCubePosition(const CubePosition& pos, const Grid& grid)
     -> Point3D {
   auto vert_ratio = (pos.row + 0.5) / grid.rows_count;
@@ -68,6 +45,29 @@ auto getPosition3dForCubePosition(const CubePosition& pos, const Grid& grid)
     default:
       emscripten_throw_string("Unknown cube side");
   }
+}
+
+auto getCubeRotationForPosition(const CubePosition& pos, const Grid& grid)
+    -> ModelRotation {
+  auto pos_3d = getPosition3dForCubePosition(pos, grid);
+
+  // angle around X axis
+  auto x_vector = pos_3d;
+  x_vector.y = 0;
+  auto x_angle_rad =
+      (pos_3d.y > 0 ? 1 : -1) * getAngleBetweenVectors(pos_3d, x_vector);
+
+  // angle around Y axis
+  auto y_vector = pos_3d;
+  y_vector.x = 0;
+  auto y_angle_rad =
+      (pos_3d.x > 0 ? -1 : 1) * getAngleBetweenVectors(pos_3d, y_vector);
+  y_angle_rad = pos_3d.z < 0 ? M_PI - y_angle_rad : y_angle_rad;
+
+  return {
+      .x = std::round(normalizeDegrees(radToDeg(x_angle_rad))),
+      .y = std::round(normalizeDegrees(radToDeg(y_angle_rad))),
+  };
 }
 
 auto getNextCubePositionAndDirection(const CubePosition& pos,

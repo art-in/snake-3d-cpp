@@ -45,28 +45,35 @@ void updateGameStateLoop(GameState* state) {
 
 void plantObjects(GameState* state) {
   auto& scene = state->scene;
-  state->snake = Snake{};
 
   std::set<CubePosition> object_positions;
+
+  // plant snake
+  state->snake = Snake{};
+  object_positions.insert(*state->snake.parts.begin());
 
   // plant apples
   state->apples.clear();
 
-  for (int i = 0; i < APPLES_COUNT; i++) {
+  while (state->apples.size() < APPLES_COUNT) {
     auto pos = getRandomCubePosition(scene.cube);
-    state->apples.insert(pos);
-    object_positions.insert(pos);
+
+    // do not plant above other objects
+    if (object_positions.count(pos) == 0) {
+      state->apples.insert(pos);
+      object_positions.insert(pos);
+    }
   }
 
   // plant stones
   state->stones.clear();
 
-  for (int i = 0; i < STONES_COUNT; i++) {
+  while (state->stones.size() < STONES_COUNT) {
     auto pos = getRandomCubePosition(scene.cube);
 
-    // do not place stones above other objects eg. apples
     if (object_positions.count(pos) == 0) {
       state->stones.insert(pos);
+      object_positions.insert(pos);
     }
   }
 
@@ -76,15 +83,19 @@ void plantObjects(GameState* state) {
 }
 
 void startOrPauseGame(GameState* state) {
-  if (state->status == EGameStatus::Welcome ||
-      state->status == EGameStatus::Paused) {
-    state->status = EGameStatus::InGame;
-  } else if (state->status == EGameStatus::Win ||
-             state->status == EGameStatus::Fail) {
-    plantObjects(state);
-    state->status = EGameStatus::InGame;
-  } else if (state->status == EGameStatus::InGame) {
-    state->status = EGameStatus::Paused;
+  switch (state->status) {
+    case EGameStatus::Welcome:
+    case EGameStatus::Paused:
+      state->status = EGameStatus::InGame;
+      break;
+    case EGameStatus::Win:
+    case EGameStatus::Fail:
+      plantObjects(state);
+      state->status = EGameStatus::InGame;
+      break;
+    case EGameStatus::InGame:
+      state->status = EGameStatus::Paused;
+      break;
   }
 
   if (state->status == EGameStatus::InGame) {

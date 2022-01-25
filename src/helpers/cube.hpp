@@ -10,11 +10,11 @@
 #include "../models/ModelRotation.hpp"
 #include "../models/Point3D.hpp"
 
-auto getCubeRotationForPosition(const CubePosition& pos, const Grid& grid)
-    -> ModelRotation;
-
 auto getPosition3dForCubePosition(const CubePosition& pos, const Grid& grid)
     -> Point3D;
+
+auto getCubeRotationForPosition(const CubePosition& pos, const Grid& grid)
+    -> ModelRotation;
 
 auto getNextCubePositionAndDirection(const CubePosition& pos,
                                      EDirection direction, const Grid& grid)

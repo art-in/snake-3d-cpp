@@ -6,10 +6,6 @@ const packDir = path.resolve(__dirname, "pack");
 const staticDir = path.resolve(__dirname, "static");
 
 module.exports = {
-  mode: "development", // production
-  optimization: {
-    minimize: false,
-  },
   entry: {
     index: path.resolve(buildDir, "main.js")
   },

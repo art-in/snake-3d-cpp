@@ -7,8 +7,9 @@
     "clean": "rimraf build pack",
     "cmake": "cmake -DCMAKE_TOOLCHAIN_FILE=/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake .",
     "build": "npm run cmake && cmake --build . --verbose",
-    "pack": "npm run clean && npm run build && webpack",
-    "start": "npm run clean && npm run build && webpack-dev-server --open"
+    "start": "npm run clean && npm run build && webpack-dev-server --mode development --open",
+    "pack": "npm run clean && npm run build && webpack --mode production",
+    "serve": "npm run pack && serve pack"
   },
   "dependencies": {
     "copy-webpack-plugin": "^10.0.0",

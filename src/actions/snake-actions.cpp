@@ -24,10 +24,8 @@ void moveSnakeLoop(GameState* state) {
 void moveSnake(GameState* state) {
   auto& scene = state->scene;
   auto& snake = state->snake;
-  auto& grid = scene.cube.grid;
 
-  // instead of moving each snake part one step ahead, make tail part new head.
-  // positions of all other parts stay the same
+  // instead of moving each snake part one step ahead, move tail to new head
   const auto head = snake.parts.front();
   const auto tail = snake.parts.back();
 
@@ -35,7 +33,7 @@ void moveSnake(GameState* state) {
   snake.parts.pop_back();
 
   auto [newHead, newDirection] =
-      getNextCubePositionAndDirection(head, snake.direction, grid);
+      getNextCubePositionAndDirection(head, snake.direction, scene.cube.grid);
 
   snake.parts.push_front(newHead);
   snake.direction = newDirection;

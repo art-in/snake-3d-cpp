@@ -25,13 +25,12 @@ void onKeyDown(GameState* state, const std::string& key_code) {
   }
 
   if (direction.has_value()) {
-    const auto& headPos = state->snake.parts.front();
+    const auto& head = state->snake.parts.front();
     const auto& grid = state->scene.cube.grid;
 
     // adjust direction per current camera rotation
-    if ((headPos.side == ECubeSide::Up && headPos.row >= grid.rows_count / 2) ||
-        (headPos.side == ECubeSide::Down &&
-         headPos.row < grid.rows_count / 2)) {
+    if ((head.side == ECubeSide::Up && head.row >= grid.rows_count / 2) ||
+        (head.side == ECubeSide::Down && head.row < grid.rows_count / 2)) {
       direction = getOppositeDirection(direction.value());
     }
 
@@ -41,8 +40,10 @@ void onKeyDown(GameState* state, const std::string& key_code) {
 
 void onMouseDown(GameState* state) {
   if (state->status != EGameStatus::InGame) {
-    state->scene.cube.mouse_is_dragging = true;
-    state->scene.cube.camera_mode = ECameraMode::ManualControl;
+    auto& cube = state->scene.cube;
+
+    cube.mouse_is_dragging = true;
+    cube.camera_mode = ECameraMode::ManualControl;
   }
 }
 

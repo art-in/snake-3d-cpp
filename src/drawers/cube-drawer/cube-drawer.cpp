@@ -108,7 +108,6 @@ void initCubeDrawer(GameState* state) {
   // define how to extract cube side index from vertex buffer
   glEnableVertexAttribArray(cube_vertex_side_attr_location);
   glBindBuffer(GL_ARRAY_BUFFER, cube_vertex_coords_buffer);
-
   glVertexAttribPointer(cube_vertex_side_attr_location,  // index
                         1,                               // size
                         GL_FLOAT,                        // type
@@ -120,7 +119,6 @@ void initCubeDrawer(GameState* state) {
   // define how to extract coordinates from texture coordinates buffer
   glEnableVertexAttribArray(cube_texture_coord_attr_location);
   glBindBuffer(GL_ARRAY_BUFFER, cube_texture_coords_buffer);
-
   glVertexAttribPointer(cube_texture_coord_attr_location,  // index
                         2,                                 // size
                         GL_FLOAT,                          // type
@@ -215,11 +213,11 @@ void drawCubeLoop(GameState* state) {
       canvas["clientWidth"].as<double>() / canvas["clientHeight"].as<double>();
   const auto projection_matrix = perspective(FIELD_OF_VIEW, aspect, 1, 2000);
 
-  static const Vec3 cameraPosition{0, 0, 2};
+  static const Vec3 camera_position{0, 0, 2};
   static const Vec3 up{0, 1, 0};
   static const Vec3 target{0, 0, 0};
 
-  static const auto camera_matrix = lookAt(cameraPosition, target, up);
+  static const auto camera_matrix = lookAt(camera_position, target, up);
   static const auto view_matrix = inverse(camera_matrix);
   const auto view_projection_matrix = multiply(projection_matrix, view_matrix);
 
@@ -237,7 +235,6 @@ void drawCube(GameState* state, const Matrix4& matrix) {
 
   auto& scene = state->scene;
   auto& cube = scene.cube;
-  const auto& canvas = scene.canvas.value();
   const auto& ctx = scene.ctx.value();
 
   ASSERT(cube.program.has_value());

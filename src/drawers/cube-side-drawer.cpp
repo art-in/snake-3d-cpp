@@ -38,8 +38,6 @@ void initCubeSideDrawer(GameState* state, ECubeSide side) {
 }
 
 void drawCubeSideLoop(GameState* state, ECubeSide side_type) {
-  const auto& grid = state->scene.cube.grid;
-
   auto& side = state->scene.cube.sides[side_type];
   if (!side.needs_redraw) {
     return;
@@ -61,17 +59,19 @@ void drawCubeSideLoop(GameState* state, ECubeSide side_type) {
   ctx.call<void>("fillRect", 0, 0, width, height);
 
   // draw grid
-  const auto cellWidth = width / grid.cols_count;
-  const auto cellHeight = height / grid.rows_count;
+  const auto& grid = state->scene.cube.grid;
+
+  const auto cell_width = width / grid.cols_count;
+  const auto cell_height = height / grid.rows_count;
 
   for (int i = 1; i < grid.cols_count; ++i) {
-    const auto x = i * cellWidth;
+    const auto x = i * cell_width;
     ctx.call<void>("moveTo", x, 0);
     ctx.call<void>("lineTo", x, height);
   }
 
   for (int i = 1; i < grid.rows_count; ++i) {
-    const auto y = i * cellHeight;
+    const auto y = i * cell_height;
     ctx.call<void>("moveTo", 0, y);
     ctx.call<void>("lineTo", width, y);
   }
@@ -83,9 +83,9 @@ void drawCubeSideLoop(GameState* state, ECubeSide side_type) {
   ctx.set("fillStyle", "red");
   for (const auto& part : state->snake.parts) {
     if (part.side == side_type) {
-      ctx.call<void>("fillRect", part.col * cellWidth,
-                     height - part.row * cellHeight - cellHeight, cellWidth,
-                     cellHeight);
+      ctx.call<void>("fillRect", part.col * cell_width,
+                     height - part.row * cell_height - cell_height, cell_width,
+                     cell_height);
     }
   }
 
@@ -93,9 +93,9 @@ void drawCubeSideLoop(GameState* state, ECubeSide side_type) {
   ctx.set("fillStyle", "green");
   for (const auto& apple : state->apples) {
     if (apple.side == side_type) {
-      ctx.call<void>("fillRect", apple.col * cellWidth,
-                     height - apple.row * cellHeight - cellHeight, cellWidth,
-                     cellHeight);
+      ctx.call<void>("fillRect", apple.col * cell_width,
+                     height - apple.row * cell_height - cell_height, cell_width,
+                     cell_height);
     }
   }
 
@@ -103,31 +103,32 @@ void drawCubeSideLoop(GameState* state, ECubeSide side_type) {
   ctx.set("fillStyle", "black");
   for (const auto& stone : state->stones) {
     if (stone.side == side_type) {
-      ctx.call<void>("fillRect", stone.col * cellWidth,
-                     height - stone.row * cellHeight - cellHeight, cellWidth,
-                     cellHeight);
+      ctx.call<void>("fillRect", stone.col * cell_width,
+                     height - stone.row * cell_height - cell_height, cell_width,
+                     cell_height);
     }
   }
 
   // draw status overlay
   if (state->status != EGameStatus::InGame) {
-    static const auto overlay_height = 200;
-    static const auto overlay_width = 400;
-    static const auto overlay_padding = 30;
+    static const auto OVERLAY_HEIGHT = 200;
+    static const auto OVERLAY_WIDTH = 400;
+    static const auto OVERLAY_PADDING = 30;
 
-    const auto overlay_horizontal_margin = (width - overlay_width) / 2;
-    const auto overlay_vertical_margin = (height - overlay_height) / 2;
+    const auto overlay_horizontal_margin = (width - OVERLAY_WIDTH) / 2;
+    const auto overlay_vertical_margin = (height - OVERLAY_HEIGHT) / 2;
 
     ctx.set("globalAlpha", 0.7);
     ctx.set("fillStyle", "white");
     ctx.call<void>("fillRect", overlay_horizontal_margin,
-                   overlay_vertical_margin, overlay_width, overlay_height);
+                   overlay_vertical_margin, OVERLAY_WIDTH, OVERLAY_HEIGHT);
 
     ctx.set("lineWidth", 3);
     ctx.set("strokeStyle", "black");
     ctx.call<void>("strokeRect", overlay_horizontal_margin,
-                   overlay_vertical_margin, overlay_width, overlay_height);
+                   overlay_vertical_margin, OVERLAY_WIDTH, OVERLAY_HEIGHT);
 
+    // title
     ctx.set("fillStyle", "black");
     static const auto title_font =
         getCanvasFontString(70, "Consolas", "px", "bold");
@@ -137,25 +138,27 @@ void drawCubeSideLoop(GameState* state, ECubeSide side_type) {
                               : state->status == EGameStatus::Fail ? "FAIL"
                                                                    : "SNAKE 3D";
 
-    const auto header_size = measureCanvasText(ctx, title);
-    ctx.call<void>("fillText", title, width / 2 - header_size.width / 2,
-                   height / 2 + header_size.height / 2);
+    const auto title_size = measureCanvasText(ctx, title);
+    ctx.call<void>("fillText", title, width / 2 - title_size.width / 2,
+                   height / 2 + title_size.height / 2);
 
+    // controls hint
     static const auto controls_hint_font = getCanvasFontString(20, "Consolas");
     ctx.set("font", controls_hint_font);
     static const std::string constrols_hint = "WSAD/arrows to control";
     const auto controls_hint_size = measureCanvasText(ctx, constrols_hint);
     ctx.call<void>(
         "fillText", constrols_hint, width / 2 - controls_hint_size.width / 2,
-        overlay_vertical_margin + overlay_padding + controls_hint_size.height);
+        overlay_vertical_margin + OVERLAY_PADDING + controls_hint_size.height);
 
+    // start hint
     static const auto start_hint_font = getCanvasFontString(20, "Consolas");
     ctx.set("font", start_hint_font);
     static const std::string start_hint = "space/enter to start";
     const auto start_hint_size = measureCanvasText(ctx, start_hint);
     ctx.call<void>("fillText", start_hint,
                    width / 2 - start_hint_size.width / 2,
-                   height - overlay_vertical_margin - overlay_padding);
+                   height - overlay_vertical_margin - OVERLAY_PADDING);
   }
 
   side.needs_redraw = false;

@@ -5,17 +5,11 @@
 #include <algorithm>
 #include <cmath>
 
-const double AUTO_ROTATION_STEP_MIN = 0.5;
-const double AUTO_ROTATION_STEP_MAX = 10;
-const Range AUTO_ROTATION_STEP_RANGE{
-    AUTO_ROTATION_STEP_MIN,
-    AUTO_ROTATION_STEP_MAX,
-};
+const Range AUTO_ROTATION_STEP_RANGE{0.5, 10};
 const Range AUTO_ROTATION_ANGLE_RANGE{0, 180};
 
 void autoRotateLoop(GameState* state) {
-  auto& scene = state->scene;
-  auto& cube = scene.cube;
+  auto& cube = state->scene.cube;
 
   auto& current_rotation = cube.current_rotation;
   auto& target_rotation = cube.target_rotation;
@@ -26,11 +20,10 @@ void autoRotateLoop(GameState* state) {
 
   if (cube.camera_mode == ECameraMode::FollowSnake) {
     const auto& head = state->snake.parts.front();
-    cube.target_rotation = getCubeRotationForPosition(head, cube.grid);
+    target_rotation = getCubeRotationForPosition(head, cube.grid);
   }
 
-  if (cube.current_rotation.x != cube.target_rotation.x ||
-      cube.current_rotation.y != cube.target_rotation.y) {
+  if (cube.current_rotation != cube.target_rotation) {
     cube.needs_redraw = true;
   }
 
@@ -45,13 +38,13 @@ void autoRotateLoop(GameState* state) {
   }
 }
 
-auto makeRotationStep(Degrees current_angle, Degrees target_angle) -> double {
+auto makeRotationStep(Degrees current_angle, Degrees target_angle) -> Degrees {
   const auto angle_diff =
       std::min({std::abs(current_angle - target_angle),
                 std::abs(current_angle - target_angle - 360),
                 std::abs(current_angle - target_angle + 360)});
 
-  if (angle_diff < AUTO_ROTATION_STEP_MIN) {
+  if (angle_diff < AUTO_ROTATION_STEP_RANGE[0]) {
     return target_angle;
   }
 
@@ -60,6 +53,7 @@ auto makeRotationStep(Degrees current_angle, Degrees target_angle) -> double {
   auto nextCurrentRotation =
       current_angle +
       rotation_step * getRotationDirection(current_angle, target_angle);
+
   return normalizeDegrees(nextCurrentRotation);
 }
 
@@ -84,5 +78,5 @@ auto getRotationDirection(Degrees from, Degrees to) -> int {
     return (-from + to < 180) ? 1 : -1;
   }
 
-  emscripten_throw_string("Should not be here");
+  emscripten_throw_string("unreachable");
 }
